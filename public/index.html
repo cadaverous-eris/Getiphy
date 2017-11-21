@@ -7,26 +7,9 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      form {
-        position: fixed;
-        bottom: 0;
-        left: 5%;
-        width: 90%;
-      }
-      html, body {
-        /*height: 100%;*/
-      }
-      #main-container {
-        position: relative;
-        min-height: 100%;
-      }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-      #active-users { list-style-type: none; margin: 0; padding: 0; }
-    </style>
+
+    <script src="/main.js"></script>
+    <link rel="stylesheet" href="/style.css">
   </head>
   <body>
 
@@ -69,68 +52,5 @@
         </div>
       </div>
     </div>
-    
-    <script>
-      $(function () {
-
-        var username = Math.random() + "_";
-
-        var socket = io();
-
-        $(this).data('username', username);
-
-        login();
-
-        $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-
-        socket.on('chat message', function(data) {
-          logMessage(data);
-        });
-
-        socket.on('user joined', function(data) {
-          $('#messages').append($('<li>').text(data.username + " has joined"));
-          $('#active-users').empty();
-          if (data.activeUsers) {
-            for (var socketID in data.activeUsers) {
-              $('#active-users').append($('<li>').text(data.activeUsers[socketID]));
-            }
-          }
-        });
-
-        socket.on('user left', function(data) {
-          $('#messages').append($('<li>').text(data.username + " has left"));
-          $('#active-users').empty();
-          if (data.activeUsers) {
-            for (var socketID in data.activeUsers) {
-              $('#active-users').append($('<li>').text(data.activeUsers[socketID]));
-            }
-          }
-        });
-
-        socket.on('logged in', function(data) {
-          $('#active-users').empty();
-          if (data.activeUsers) {
-            for (var socketID in data.activeUsers) {
-              $('#active-users').append($('<li>').text(data.activeUsers[socketID]));
-            }
-          }
-        });
-
-        function login() {
-          if (username) {
-            socket.emit('login', username);
-          }
-        }
-
-        function logMessage(data) {
-          $('#messages').append($('<li>').text(data.username + ": " + data.message));
-        }
-
-      });
-    </script>
   </body>
 </html>
