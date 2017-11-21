@@ -35,17 +35,35 @@
       <div class="row" id="main-row">
         <div class="col-sm-9" id="chat-col">
           <ul id="messages"></ul>
-          <form action="">
-            <div class="row">
-              <div class="col-sm-10" style="padding: 5px;">
-                <input class="form-control" id="m" autocomplete="off" placeholder="">
-              </div>
-              <div class="col-sm-2" style="padding: 5px;">
-                <button class="form-control" btn btn-primary>Send</button>
-              </div>
+          <div id="input">
+            <div class="input-wrapper empty">
+              <input type="text" class="query" />
+              <div class="loader"></div>
+              <div class="clear"></div>
             </div>
-          </form>
-        </div>
+            <div class="result">
+              <p class="no-result center">
+                <!-- Quick example of the <a href="https://github.com/giphy/GiphyAPI">Giphy Api</a> which is pretty cool if you ask me. Just type in a search phase and get a random related GIF.
+                <br /> <br />
+                I also decided to go nuts and use <a href="https://github.com/lukehoban/es6features">ES6</a> features (like let, const, fat arrow function syntax and string templates) and the <a href="https://github.com/google/traceur-compiler">Traceur Compiler</a> just to play around with whats coming up in the next generation of javascript, some pretty cool stuff.
+                <br /> <br />
+                By: Blake Tarter -->
+              </p>
+            </div>
+
+            <button class="random">Get Another GIF</button>
+              <form action="">
+                <div class="row">
+                  <div class="col-sm-10" style="padding: 5px;">
+                    <input class="form-control" id="m" autocomplete="off" placeholder="">
+                  </div>
+                  <div class="col-sm-2" style="padding: 5px;">
+                    <button class="form-control" btn btn-primary>Send</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         <div class="col-sm-3" id="users-col">
           <h4 style="text-align: center;">Active Users</h3>
           <ul id="active-users"></ul>

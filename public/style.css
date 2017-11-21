@@ -5,7 +5,7 @@
   border-box;
 }
 
-form {
+#input {
   position: fixed;
   bottom: 0;
   left: 5%;
