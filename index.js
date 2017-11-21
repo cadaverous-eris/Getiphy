@@ -23,6 +23,11 @@ server.listen(PORT, function() {
 });
 
 // The actual chatroom
+var nextID = 0;
+
+var activeUsers = {
+	
+};
 
 io.on('connection', function(socket) {
 
@@ -34,6 +39,7 @@ io.on('connection', function(socket) {
   socket.on('login', function(username) {
     // Store the username in the socket session for this client
     socket.username = username;
+    console.log(socket);
     socket.emit('logged in', {
       
     });
