@@ -25,6 +25,7 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      #active-users { list-style-type: none; margin: 0; padding: 0; }
     </style>
   </head>
   <body>
@@ -49,7 +50,7 @@
 
     <div class="container" id="main-container">
       <div class="row" id="main-row">
-        <div class="col" id="chat-col">
+        <div class="col-sm-9" id="chat-col">
           <ul id="messages"></ul>
           <form action="">
             <div class="row">
@@ -62,6 +63,10 @@
             </div>
           </form>
         </div>
+        <div class="col-sm-3" id="users-col">
+          <h4 style="text-align: center;">Active Users</h3>
+          <ul id="active-users"></ul>
+        </div>
       </div>
     </div>
     
@@ -73,7 +78,6 @@
         var socket = io();
 
         $(this).data('username', username);
-        console.log($(this).data('username'));
 
         login();
 
@@ -89,10 +93,31 @@
 
         socket.on('user joined', function(data) {
           $('#messages').append($('<li>').text(data.username + " has joined"));
+          $('#active-users').empty();
+          if (data.activeUsers) {
+            for (var socketID in data.activeUsers) {
+              $('#active-users').append($('<li>').text(data.activeUsers[socketID]));
+            }
+          }
         });
 
         socket.on('user left', function(data) {
           $('#messages').append($('<li>').text(data.username + " has left"));
+          $('#active-users').empty();
+          if (data.activeUsers) {
+            for (var socketID in data.activeUsers) {
+              $('#active-users').append($('<li>').text(data.activeUsers[socketID]));
+            }
+          }
+        });
+
+        socket.on('logged in', function(data) {
+          $('#active-users').empty();
+          if (data.activeUsers) {
+            for (var socketID in data.activeUsers) {
+              $('#active-users').append($('<li>').text(data.activeUsers[socketID]));
+            }
+          }
         });
 
         function login() {

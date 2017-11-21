@@ -23,8 +23,6 @@ server.listen(PORT, function() {
 });
 
 // The actual chatroom
-var nextID = 0;
-
 var activeUsers = {
 	
 };
@@ -33,27 +31,35 @@ io.on('connection', function(socket) {
 
   socket.on('chat message', function(msg) {
   	// Relay the message to all clients
-    io.emit('chat message', {username: socket.username, message: msg});
+    io.emit('chat message', {
+    	username: socket.username,
+    	id: socket.id,
+    	message: msg
+    });
   });
 
   socket.on('login', function(username) {
     // Store the username in the socket session for this client
     socket.username = username;
-    console.log(socket);
+    activeUsers[socket.id] = username;
     socket.emit('logged in', {
-      
+      username: socket.username,
+      activeUsers: activeUsers
     });
     // Tell all clients that this client has joined
     socket.broadcast.emit('user joined', {
-      username: socket.username
+      username: socket.username,
+      activeUsers: activeUsers
     });
   });
 
   socket.on('disconnect', function () {
+  	activeUsers[socket.id] = undefined;
     if (socket.username) {
       // Tell all clients that this client has left
       socket.broadcast.emit('user left', {
-        username: socket.username
+        username: socket.username,
+      	activeUsers: activeUsers
       });
     }
   });
