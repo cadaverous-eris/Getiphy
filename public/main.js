@@ -10,7 +10,7 @@ $( document ).ready(function() {
 
 		login();
 
-		$('form').submit(function(){
+		$('#send-button').on('click', function() {
 		  socket.emit('chat message', $('#m').val());
 		  $('#m').val('');
 		  return false;
