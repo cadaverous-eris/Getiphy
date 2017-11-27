@@ -1,6 +1,7 @@
 
 body {
   background-color: #dddddd;
+  /*background-image: url("/bg.png");*/
 }
 
 .navbar {
@@ -99,8 +100,12 @@ body {
   padding: 0px;
 }
 
-#m {
+#attachment-button {
   border-radius: 10px 0px 0px 10px;
+}
+
+#m {
+  border-radius: 0px;
   background-color: #f8f9fa;
 }
 
