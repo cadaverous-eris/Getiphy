@@ -9,7 +9,8 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
     <script src="https://use.fontawesome.com/a50ca22383.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
@@ -43,7 +44,7 @@
               <div id=message-input>
                 <div class="row" style="margin: 0px 0px 0px 0px">
                   <div class="col col-auto">
-                    <button class="form-control btn btn-secondary" id="attachment-button"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-secondary form-control" id="attachment-button" data-toggle="modal" data-target="#attachment-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
                   </div>
                   <div class="col">
                     <input class="form-control" id="m" autocomplete="off" placeholder="">
@@ -58,5 +59,58 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="attachment-modal" tabindex="-1" role="dialog" aria-labelledby="attachment-modal-label" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header navbar bg-light navbar-light" style="padding: 0px; border-bottom: none;">
+            <nav class="nav nav-tabs" id="api-tabs" role="tablist" style="width: 100%; padding: 5px 15px 0px 15px;">
+              <a class="navbar-brand" id="attachment-modal-label" href="#">Insert Media Attachments</a>
+
+              <a class="nav-item nav-link active" id="nav-giphy-tab" data-toggle="tab" href="#nav-giphy" role="tab" aria-controls="nav-home" aria-selected="true" style="padding-bottom: 10px;">Giphy</a>
+              <a class="nav-item nav-link" id="nav-spotify-tab" data-toggle="tab" href="#nav-spotify" role="tab" aria-controls="nav-profile" aria-selected="false" style="padding-bottom: 10px;">Spotify</a>
+
+              <a class="close nav-item float-left" href="#" data-dismiss="modal" aria-label="Close">
+                <span class=navbar-text aria-hidden="true">&times;</span>
+              </a>
+            </nav>
+              
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-giphy" role="tabpanel" aria-labelledby="nav-giphy-tab">
+                  <!-- Giphy Searching -->
+                  <div class="row justify-content-between form-inline attachment-search">
+                    <div class="input-group">
+                      <div class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></div>
+                      <input class="form-control" id="giphy-search" type="text" autocomplete="off" placeholder="Search Giphy">
+                    </div>
+                    <!--<button class="form-control btn btn-secondary" id="#giphy-next-page">
+                      More Results
+                    </button>-->
+                  </div>
+                  <div class="row justify-content-center search-results" id="giphy-results">
+                    
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="nav-spotify" role="tabpanel" aria-labelledby="nav-spotify-tab">
+                  <!-- Spotify Searching -->
+                  [To-do]
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="padding: 5px 15px;">
+            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>-->
+            <button type="button" class="btn btn-primary" id="add-attachments-button">Add Attachments</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>

@@ -134,17 +134,74 @@ $(document).ready(function() {
 	});
 
 	function logMessage(messageData) {
-		var message = $('<div>').addClass('row message');
-		message.append($('<div>').addClass('col col-auto').append($('<img>').attr('src', messageData.userdata.image).addClass('profile-image')));
-		var content = $('<div>').addClass('col');
-		content.append($('<h4>').addClass('message-sender' + ((messageData.userdata && userdata && messageData.userdata.email === userdata.email) ? ' current-user' : '')).text(messageData.userdata.name));
-		content.append($('<hr>'));
-		content.append($('<p>').addClass('message-body').text(messageData.message));
-		message.append(content);
+		if (messageData && messageData.userdata) {
+			var message = $('<div>').addClass('row message');
+			message.append($('<div>').addClass('col col-auto').append($('<img>').attr('src', messageData.userdata.image).addClass('profile-image')));
+			var content = $('<div>').addClass('col');
+			content.append($('<h4>').addClass('message-sender' + ((messageData.userdata && userdata && messageData.userdata.email === userdata.email) ? ' current-user' : '')).text(messageData.userdata.name));
+			content.append($('<hr>'));
+			content.append($('<p>').addClass('message-body').text(messageData.message));
+			message.append(content);
 
-		$('#messages').append(message);
-		// $('#messages').addClass('bounceInUp');
+			$('#messages').append(message);
+		}
 	}
 
-	
+	const GIPHY_KEY = 'bEOeuErhPvzkghlGxQahBs86Pn9Gt1I9';
+	const GIPHY_LIMIT = 20;
+
+	$('#giphy-search').on('input', function() {
+		updateResults($('#giphy-search').val().trim());
+	});
+
+	function updateResults(query) {
+		$('#giphy-results').empty();
+		if (query && query.length > 0) {
+			var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + query + "&api_key=" + GIPHY_KEY + "&limit=" + GIPHY_LIMIT;
+
+			$.ajax({
+            	url: queryURL,
+            	method: 'GET'
+        	}).done(function(response) {
+            	if (response && response.data && response.data.length > 0) {
+            		for (var i = 0; i < response.data.length; i++) {
+            			console.log(response.data[i]);
+
+            			var gifCol = $('<div>').addClass('col col-auto giphy-result-holder');
+            			var gif = $('<img>').attr('src', response.data[i].images.fixed_height.url).attr('data-selected', "false").addClass('giphy-result-gif');
+
+            			gif.on('click', function() {
+            				if ($(this).attr('data-selected') === "true") {
+            					$(this).attr('data-selected', "false");
+
+            				} else {
+            					$(this).attr('data-selected', "true");
+            				}
+            			});
+
+            			gifCol.append(gif);
+            			$('#giphy-results').append(gifCol);
+            		}
+            	}
+        	});
+		}
+	}
+
+	$('#add-attachments-button').on('click', function() {
+		var currentTab = $('#nav-tabContent .active');
+		if (currentTab) {
+			switch (currentTab.attr('id')) {
+				case 'nav-giphy':
+					var selectedItems = $(".giphy-result-gif[data-selected='true']");
+					for (var i = 0; i < selectedItems.length; i++) {
+						console.log($(selectedItems[i]).attr('src'));
+					}
+				break;
+				case 'nav-spotify':
+
+				break;
+			}
+		}
+	});
+
 });
