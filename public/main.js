@@ -112,15 +112,15 @@ $(document).ready(function() {
 	});
 
 	socket.on('user joined', function(data) {
-		
+
 	});
 
 	socket.on('user left', function(data) {
-		
+
 	});
 
 	socket.on('logged in', function(data) {
-		
+
 	});
 
 	socket.on('previous messages', function(messages) {
