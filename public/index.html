@@ -1,7 +1,11 @@
 <!doctype html>
-<html>
+<html lang='en'>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Getiphy</title>
+
+    <meta name="google-signin-scope" content="profile email openid">
+    <meta name="google-signin-client_id" content="317806146254-n3bg2jkashngj01vk4c5j288kmhbuq24.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -13,58 +17,45 @@
   </head>
   <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Gitify</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Chat</a>
-          </li>
-        </ul>
+    <nav class="navbar navbar-light justify-content-between" id="navbar">
+      <a class="navbar-brand" href="#">Getiphy</a>
+      <div class="form-inline" id="login-area">
+        <div class="g-signin2 mr-sm-2" data-onsuccess="login" data-theme="dark"></div>
       </div>
     </nav>
 
     <div class="container" id="main-container">
       <div class="row" id="main-row">
-        <div class="col-sm-9" id="chat-col">
-          <ul id="messages"></ul>
-          <div id="input">
-            <div class="input-wrapper empty">
-              <input type="text" class="query" />
-              <div class="loader"></div>
-              <div class="clear"></div>
-            </div>
-            <div class="result">
-              <p class="no-result center">
-                <!-- Quick example of the <a href="https://github.com/giphy/GiphyAPI">Giphy Api</a> which is pretty cool if you ask me. Just type in a search phase and get a random related GIF.
-                <br /> <br />
-                I also decided to go nuts and use <a href="https://github.com/lukehoban/es6features">ES6</a> features (like let, const, fat arrow function syntax and string templates) and the <a href="https://github.com/google/traceur-compiler">Traceur Compiler</a> just to play around with whats coming up in the next generation of javascript, some pretty cool stuff.
-                <br /> <br />
-                By: Blake Tarter -->
-              </p>
-            </div>
+        <div class="col" id="chat-col">
+          <div class="row" id="chat-row">
+            <div class="col" id="messages"></div>
+          </div>
 
-            <button class="random">Get Another GIF</button>
-              <div class="row">
-                <div class="col-sm-10" style="padding: 5px;">
-                  <input class="form-control" id="m" autocomplete="off" placeholder="">
+          <div class="row">
+            <div class='col' id="input">
+              <div id=message-input>
+                <!--<div class="input-wrapper empty">
+                  <input type="text" class="query" />
+                  <div class="loader"></div>
+                  <div class="clear"></div>
                 </div>
-                <div class="col-sm-2" style="padding: 5px;">
-                  <button class="form-control btn btn-primary" id="send-button">Send</button>
+                <div class="result">
+                  <p class="no-result center">
+                  </p>
+                </div>
+                <button class="random">Get Another GIF</button>-->
+
+                <div class="row" style="margin: 0px 0px 0px 0px">
+                  <div class="col">
+                    <input class="form-control" id="m" autocomplete="off" placeholder="">
+                  </div>
+                  <div class="col col-auto">
+                    <button class="form-control btn btn-primary" id="send-button">Send</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        <div class="col-sm-3" id="users-col">
-          <h4 style="text-align: center;">Active Users</h3>
-          <ul id="active-users"></ul>
         </div>
       </div>
     </div>
