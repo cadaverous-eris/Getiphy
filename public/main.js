@@ -134,127 +134,74 @@ $(document).ready(function() {
 	});
 
 	function logMessage(messageData) {
-		var message = $('<div>').addClass('row message');
-		message.append($('<div>').addClass('col col-auto').append($('<img>').attr('src', messageData.userdata.image).addClass('profile-image')));
-		var content = $('<div>').addClass('col');
-		content.append($('<h4>').addClass('message-sender' + ((messageData.userdata && userdata && messageData.userdata.email === userdata.email) ? ' current-user' : '')).text(messageData.userdata.name));
-		content.append($('<hr>'));
-		content.append($('<p>').addClass('message-body').text(messageData.message));
-		message.append(content);
+		if (messageData && messageData.userdata) {
+			var message = $('<div>').addClass('row message');
+			message.append($('<div>').addClass('col col-auto').append($('<img>').attr('src', messageData.userdata.image).addClass('profile-image')));
+			var content = $('<div>').addClass('col');
+			content.append($('<h4>').addClass('message-sender' + ((messageData.userdata && userdata && messageData.userdata.email === userdata.email) ? ' current-user' : '')).text(messageData.userdata.name));
+			content.append($('<hr>'));
+			content.append($('<p>').addClass('message-body').text(messageData.message));
+			message.append(content);
 
-		$('#messages').append(message);
-	}
-
-	const PUBLIC_KEY = 'dc6zaTOxFJmzC';
-	const BASE_URL = '//api.giphy.com/v1/gifs/';
-	const ENDPOINT = 'search';
-	const LIMIT = 4;
-	const RATING = 'pg';
-
-	let $queryInput = $('.query');
-	let $resultWrapper = $('.result');
-	let $loader = $('.loader');
-	let $inputWrapper = $('.input-wrapper');
-	let $clear = $('.clear');
-	let $button = $('.random');
-	let currentTimeout;
-
-	let query = {
-		text: null,
-		offset: 0,
-		request() {
-			return `${BASE_URL}${ENDPOINT}?q=${this.text}&limit=${LIMIT}&rating=${RATING}&offset=${this.offset}&api_key=${PUBLIC_KEY}`;
-		},
-		fetch(callback) {
-			$.getJSON(this.request())
-			.success(data => {
-				let results = data.data;
-
-				if (results.length) {
-					let url = results[0].images.downsized.url;
-					console.log(results);
-					callback(url);
-				} else {
-			  		callback('');
-				}
-			})
-			.fail(error => {
-				console.log(error);
-			});
+			$('#messages').append(message);
 		}
 	}
 
-	function buildImg(src = '//giphy.com/embed/xv3WUrBxWkUPC', classes = 'gif hidden') {
-		return `<img src="${src}" class="${classes}" alt="gif" />`;
+	const GIPHY_KEY = 'bEOeuErhPvzkghlGxQahBs86Pn9Gt1I9';
+	const GIPHY_LIMIT = 20;
+
+	$('#giphy-search').on('input', function() {
+		updateResults($('#giphy-search').val().trim());
+	});
+
+	function updateResults(query) {
+		$('#giphy-results').empty();
+		if (query && query.length > 0) {
+			var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + query + "&api_key=" + GIPHY_KEY + "&limit=" + GIPHY_LIMIT;
+
+			$.ajax({
+            	url: queryURL,
+            	method: 'GET'
+        	}).done(function(response) {
+            	if (response && response.data && response.data.length > 0) {
+            		for (var i = 0; i < response.data.length; i++) {
+            			console.log(response.data[i]);
+
+            			var gifCol = $('<div>').addClass('col col-auto giphy-result-holder');
+            			var gif = $('<img>').attr('src', response.data[i].images.fixed_height.url).attr('data-selected', "false").addClass('giphy-result-gif');
+
+            			gif.on('click', function() {
+            				if ($(this).attr('data-selected') === "true") {
+            					$(this).attr('data-selected', "false");
+
+            				} else {
+            					$(this).attr('data-selected', "true");
+            				}
+            			});
+
+            			gifCol.append(gif);
+            			$('#giphy-results').append(gifCol);
+            		}
+            	}
+        	});
+		}
 	}
 
-	$clear.on('click', e => {
-		$queryInput.val('');
-		$inputWrapper.removeClass('active').addClass('empty');
-		$('.gif').addClass('hidden');
-		$loader.removeClass('done');
-		$button.removeClass('active');
-	});
-
-	$button.on('click', e => {
-		query.offset = Math.floor(Math.random() * 25);
-
-		query.fetch(url => {
-			if (url.length) {
-				$resultWrapper.html(buildImg(url));
-
-				$button.addClass('active');
-			} else {
-				$resultWrapper.html(`<p class="no-results hidden">No Results found for <strong>${query.text}</strong></p>`);
-
-				$button.removeClass('active');
-			}
-
-			$loader.addClass('done');
-			currentTimeout = setTimeout(() => {
-				$('.hidden').toggleClass('hidden');
-			}, 1000);
-		});
-	});
-
-	$queryInput.on('keyup', e => {
-		let key = e.which || e.keyCode;
-		query.text = $queryInput.val();
-		query.offset = Math.floor(Math.random() * 25);
-
-		if (currentTimeout) {
-			clearTimeout(currentTimeout);
-			$loader.removeClass('done');
-		}
-
-		currentTimeout = setTimeout(() => {
-			currentTimeout = null;
-			$('.gif').addClass('hidden');
-
-			if (query.text && query.text.length) {
-				$inputWrapper.addClass('active').removeClass('empty');
-
-				query.fetch(url => {
-					if (url.length) {
-						$resultWrapper.html(buildImg(url));
-
-						$button.addClass('active');
-					} else {
-						$resultWrapper.html(`<p class="no-results hidden">No Results found for <strong>${query.text}</strong></p>`);
-
-						$button.removeClass('active');
+	$('#add-attachments-button').on('click', function() {
+		var currentTab = $('#nav-tabContent .active');
+		if (currentTab) {
+			switch (currentTab.attr('id')) {
+				case 'nav-giphy':
+					var selectedItems = $(".giphy-result-gif[data-selected='true']");
+					for (var i = 0; i < selectedItems.length; i++) {
+						console.log($(selectedItems[i]).attr('src'));
 					}
+				break;
+				case 'nav-spotify':
 
-					$loader.addClass('done');
-					currentTimeout = setTimeout(() => {
-						$('.hidden').toggleClass('hidden');
-					}, 100);
-				});
-			} else {
-				$inputWrapper.removeClass('active').addClass('empty');
-				$button.removeClass('active');
+				break;
 			}
-		}, 1000);
+		}
 	});
 
 });
