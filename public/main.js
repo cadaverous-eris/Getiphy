@@ -102,8 +102,19 @@ $(document).ready(function() {
 					attachmentHolder.append($('<img>').attr('src', messageAttachments.videos[i].thumbnail).addClass('attachment-preview'));
 					attachmentHolder.append($('<span>').addClass('attachment-remove').attr('aria-hidden', "true").attr('data-index', i).html("&times;").on('click', function() {
 						messageAttachments.videos.splice($(this).attr('data-index'), 1);
+						if ($(this).attr('aria-describedby')) {
+							$('#' + $(this).attr('aria-describedby')).remove();
+						}
+						$('.tooltip').remove();
 						updateAttachmentInput();
 					}));
+
+					attachmentHolder.attr({
+						'data-toggle': "tooltip",
+						'data-placement': "top",
+						'title': messageAttachments.videos[i].title,
+					});
+					attachmentHolder.tooltip();
 
 					vidRow.append(attachmentHolder);
 				}
