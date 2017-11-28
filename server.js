@@ -32,7 +32,7 @@ io.on('connection', function(socket) {
         var messageData = {
             userdata: socket.userdata,
             id: socket.id,
-            message: msg
+            message: msg,
         };
 
         // Relay the message to all clients

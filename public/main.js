@@ -1,7 +1,11 @@
 
 var userdata;
-
 var socket;
+
+var messageAttachments = {
+	gifs: [],
+	songs: [],
+};
 
 function login(googleUser) {
 	var profile = googleUser.getBasicProfile();
@@ -68,6 +72,37 @@ $(document).ready(function() {
 		$('#messages').scrollTop($('#messages').prop('scrollHeight') - $('#messages').height());
 	}
 
+	function updateAttachmentInput() {
+		$('.attachment-input').remove();
+		if (messageAttachments && (messageAttachments.gifs.length > 0 || messageAttachments.songs.length > 0)) {
+			var card = $('<div>').addClass('card attachment-input').css('margin-top', "10px");
+
+			var header = $('<div>').addClass('card-header attachment-input-header').text("Attachments");
+			var body = $('<div>').addClass('card-body attachment-input-body');
+
+			var gifRow = $('<div>').addClass('row justify-content-start')
+			for (var i = 0; i < messageAttachments.gifs.length; i++) {
+				var attachmentHolder = $('<div>').addClass('attachment-holder col-auto');
+				attachmentHolder.append($('<img>').attr('src', messageAttachments.gifs[i]).addClass('attachment-preview'));
+				attachmentHolder.append($('<span>').addClass('attachment-remove').attr('aria-hidden', "true").attr('data-index', i).html("&times;").on('click', function() {
+					messageAttachments.gifs.splice($(this).attr('data-index'), 1);
+					updateAttachmentInput();
+				}));
+
+				gifRow.append(attachmentHolder);
+			}
+			body.append(gifRow);
+
+			card.append(header);
+			card.append(body);
+
+			$('#message-input').append(card);
+		} else {
+
+		}
+		setMessagesHeight();
+	}
+
 	setMessagesHeight();
 	offsetInput();
 	if (userdata) {
@@ -84,10 +119,18 @@ $(document).ready(function() {
 	socket.emit('connect', userdata);
 
 	function sendMessage() {
-		if ($('#m').val().trim() && $('#m').val().trim().length > 0) {
+		if ($('#m').val().trim() && $('#m').val().trim().length > 0 || (messageAttachments && (messageAttachments.gifs.length > 0 || messageAttachments.songs.length > 0))) {
 			if (userdata) {
-				socket.emit('chat message', $('#m').val().trim());
+				socket.emit('chat message', {
+					text: $('#m').val().trim(),
+					attachments: messageAttachments,
+				});
 				$('#m').val('');
+				messageAttachments = {
+					gifs: [],
+					songs: [],
+				};
+				updateAttachmentInput();
 			} else {
 				alert("You must log in in order to send messages!");
 			}
@@ -139,11 +182,28 @@ $(document).ready(function() {
 			message.append($('<div>').addClass('col col-auto').append($('<img>').attr('src', messageData.userdata.image).addClass('profile-image')));
 			var content = $('<div>').addClass('col');
 			content.append($('<h4>').addClass('message-sender' + ((messageData.userdata && userdata && messageData.userdata.email === userdata.email) ? ' current-user' : '')).text(messageData.userdata.name));
-			content.append($('<hr>'));
-			content.append($('<p>').addClass('message-body').text(messageData.message));
+			
+			if (messageData.message.text && messageData.message.text.length) {
+				content.append($('<hr>'));
+				content.append($('<p>').addClass('message-body').text(messageData.message.text));
+			}
+
+			if (messageData.message.attachments && (messageData.message.attachments.gifs.length > 0 || messageData.message.attachments.songs.length > 0)) {
+				content.append($('<hr>'));
+				if (messageData.message.attachments.gifs.length > 0) {
+					var gifAttachments = $('<div>').addClass('row justify-content-start attachment-row');
+					for (var i = 0; i < messageData.message.attachments.gifs.length; i++) {
+						gifAttachments.append($('<img>').attr('src', messageData.message.attachments.gifs[i]).addClass('gif-attachment'));
+					}
+					content.append(gifAttachments);
+				}
+			}
+
 			message.append(content);
 
 			$('#messages').append(message);
+
+			//console.log(messageData.message.attachments);
 		}
 	}
 
@@ -157,7 +217,7 @@ $(document).ready(function() {
 	function updateResults(query) {
 		$('#giphy-results').empty();
 		if (query && query.length > 0) {
-			var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + query + "&api_key=" + GIPHY_KEY + "&limit=" + GIPHY_LIMIT;
+			var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + query + "&api_key=" + GIPHY_KEY + "&limit=" + GIPHY_LIMIT + "&rating=PG";
 
 			$.ajax({
             	url: queryURL,
@@ -165,8 +225,6 @@ $(document).ready(function() {
         	}).done(function(response) {
             	if (response && response.data && response.data.length > 0) {
             		for (var i = 0; i < response.data.length; i++) {
-            			console.log(response.data[i]);
-
             			var gifCol = $('<div>').addClass('col col-auto giphy-result-holder');
             			var gif = $('<img>').attr('src', response.data[i].images.fixed_height.url).attr('data-selected', "false").addClass('giphy-result-gif');
 
@@ -193,8 +251,19 @@ $(document).ready(function() {
 			switch (currentTab.attr('id')) {
 				case 'nav-giphy':
 					var selectedItems = $(".giphy-result-gif[data-selected='true']");
-					for (var i = 0; i < selectedItems.length; i++) {
-						console.log($(selectedItems[i]).attr('src'));
+					if (selectedItems.length + messageAttachments.gifs.length > 3) {
+						alert("You cannot attach more than 3 gifs");
+					} else {
+						for (var i = 0; i < selectedItems.length; i++) {
+							let gifSrc = $(selectedItems[i]).attr('src');
+							if (!messageAttachments.gifs.includes(gifSrc)) {
+								messageAttachments.gifs.push(gifSrc);
+							}
+						}
+						updateAttachmentInput();
+						$('#giphy-search').val('');
+						$('#giphy-results').empty();
+						$('#attachment-modal').modal('hide');
 					}
 				break;
 				case 'nav-spotify':
