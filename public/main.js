@@ -193,6 +193,13 @@ $(document).ready(function() {
 		$('#messages').scrollTop($('#messages').prop('scrollHeight') - $('#messages').height());
 	});
 
+	function urlify(text) {
+    	var urlRegex = /\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
+    	return text.replace(urlRegex, function(url) {
+        	return '<a href="' + url + '" target="_blank">' + url + '</a>';
+    	});
+	}
+
 	function logMessage(messageData) {
 		if (messageData && messageData.userdata) {
 			var message = $('<div>').addClass('row message');
@@ -202,7 +209,7 @@ $(document).ready(function() {
 			
 			if (messageData.message.text && messageData.message.text.length) {
 				content.append($('<hr>'));
-				content.append($('<p>').addClass('message-body').text(messageData.message.text));
+				content.append($('<p>').addClass('message-body').html(urlify(messageData.message.text)));
 			}
 
 			if (messageData.message.attachments && (messageData.message.attachments.gifs.length > 0 || messageData.message.attachments.videos.length > 0)) {
