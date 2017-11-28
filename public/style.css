@@ -124,6 +124,11 @@ body {
   border-radius: 10px;
 }
 
+.video-attachment {
+  margin: 5px;
+  border-radius: 10px;
+}
+
 .profile-image {
   width: 48px;
   height: auto;
@@ -207,6 +212,44 @@ body {
   height: 100px;
   width: auto;
   border-radius: 10px;
+}
+
+.youtube-result-data hr {
+  margin: 1px 0px 3px 0px;
+}
+
+.youtube-result-holder {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d8dfe5;
+  background-color: #f0f8ff;
+}
+
+.youtube-result-holder[data-selected='true'] {
+  box-shadow: 0px 0px 5px 5px #0079fa;
+}
+
+.youtube-result-holder .col {
+  margin: 0px;
+  padding: 5px;
+}
+
+.youtube-result-holder < .col {
+  margin: 0px;
+  padding: 0px;
+}
+
+.youtube-result-thumbnail {
+  border-radius: 10px;
+}
+
+.youtube-result-title {
+  font-size: 16px;
+}
+
+.youtube-result-channel {
+  font-size: 14px;
 }
 
 .attachment-input-header, .attachment-input-body > .row {
