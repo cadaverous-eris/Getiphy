@@ -46,6 +46,11 @@ function refreshMessages() {
 
 $(document).ready(function() {
 
+	setInterval(function() {
+		setMessagesHeight();
+		offsetInput();
+	}, 5000);
+
 	$(window).on('resize', function() {
 		setMessagesHeight();
 		offsetInput();
