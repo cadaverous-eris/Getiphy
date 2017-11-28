@@ -4,7 +4,7 @@ var socket;
 
 var messageAttachments = {
 	gifs: [],
-	songs: [],
+	videos: [],
 };
 
 function login(googleUser) {
@@ -74,7 +74,7 @@ $(document).ready(function() {
 
 	function updateAttachmentInput() {
 		$('.attachment-input').remove();
-		if (messageAttachments && (messageAttachments.gifs.length > 0 || messageAttachments.songs.length > 0)) {
+		if (messageAttachments && (messageAttachments.gifs.length > 0 || messageAttachments.videos.length > 0)) {
 			var card = $('<div>').addClass('card attachment-input').css('margin-top', "10px");
 
 			var header = $('<div>').addClass('card-header attachment-input-header').text("Attachments");
@@ -119,7 +119,7 @@ $(document).ready(function() {
 	socket.emit('connect', userdata);
 
 	function sendMessage() {
-		if ($('#m').val().trim() && $('#m').val().trim().length > 0 || (messageAttachments && (messageAttachments.gifs.length > 0 || messageAttachments.songs.length > 0))) {
+		if ($('#m').val().trim() && $('#m').val().trim().length > 0 || (messageAttachments && (messageAttachments.gifs.length > 0 || messageAttachments.videos.length > 0))) {
 			if (userdata) {
 				socket.emit('chat message', {
 					text: $('#m').val().trim(),
@@ -128,7 +128,7 @@ $(document).ready(function() {
 				$('#m').val('');
 				messageAttachments = {
 					gifs: [],
-					songs: [],
+					videos: [],
 				};
 				updateAttachmentInput();
 			} else {
@@ -188,7 +188,7 @@ $(document).ready(function() {
 				content.append($('<p>').addClass('message-body').text(messageData.message.text));
 			}
 
-			if (messageData.message.attachments && (messageData.message.attachments.gifs.length > 0 || messageData.message.attachments.songs.length > 0)) {
+			if (messageData.message.attachments && (messageData.message.attachments.gifs.length > 0 || messageData.message.attachments.videos.length > 0)) {
 				content.append($('<hr>'));
 				if (messageData.message.attachments.gifs.length > 0) {
 					var gifAttachments = $('<div>').addClass('row justify-content-start attachment-row');
@@ -202,27 +202,32 @@ $(document).ready(function() {
 			message.append(content);
 
 			$('#messages').append(message);
-
-			//console.log(messageData.message.attachments);
 		}
 	}
 
 	const GIPHY_KEY = 'bEOeuErhPvzkghlGxQahBs86Pn9Gt1I9';
 	const GIPHY_LIMIT = 20;
 
-	$('#giphy-search').on('input', function() {
-		updateResults($('#giphy-search').val().trim());
+	$('#giphy-search-button').on('click', function() {
+		updateGiphyResults($('#giphy-search').val().trim());
 	});
 
-	function updateResults(query) {
+	var giphyRequest;
+
+	function updateGiphyResults(query) {
 		$('#giphy-results').empty();
 		if (query && query.length > 0) {
 			var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + query + "&api_key=" + GIPHY_KEY + "&limit=" + GIPHY_LIMIT + "&rating=PG";
 
-			$.ajax({
+			if (giphyRequest && giphyRequest.readyState != 4) {
+            	giphyRequest.abort();
+        	}	
+
+			giphyRequest = $.ajax({
             	url: queryURL,
             	method: 'GET'
-        	}).done(function(response) {
+        	});
+        	giphyRequest.done(function(response) {
             	if (response && response.data && response.data.length > 0) {
             		for (var i = 0; i < response.data.length; i++) {
             			var gifCol = $('<div>').addClass('col col-auto giphy-result-holder');
@@ -266,7 +271,7 @@ $(document).ready(function() {
 						$('#attachment-modal').modal('hide');
 					}
 				break;
-				case 'nav-spotify':
+				case 'nav-youtube':
 
 				break;
 			}

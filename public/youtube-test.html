@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <title>Getiphy</title>
+
+    <meta name="google-signin-scope" content="profile email openid">
+    <meta name="google-signin-client_id" content="317806146254-ar120vfst60pjakk32sjkn5946hvr5jg.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/a50ca22383.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <link rel="stylesheet" href="/style.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+    <style>
+        iframe {
+            border: 0;
+            border-radius: 10px;
+        }
+    </style>
+
+  </head>
+  <body>
+
+    <pre id="response"></pre>
+    <div id="videos"></div>
+
+<script>
+
+var SEARCH_QUERY = "Georg Rockall-Schmidt"; // replace this with whatever you want to search for
+
+function showResponse(response) {
+    if (response && response.items) {
+        for (var i = 0; i < response.items.length; i++) {
+            //console.log(response.items[i].id.videoId);
+            var videoId = response.items[i].id.videoId;
+            var videoSrc = "//www.youtube.com/embed/" + videoId;
+
+            var iframe = $('<iframe>').attr('width', "384").attr('height', "216").attr('src', videoSrc).attr('frameborder', "0").attr('allowfullscreen', 'true');
+            $('#videos').append(iframe).append($('<br>'));
+        }
+        console.log($('#videos').html());
+    }
+}
+
+// Called automatically when JavaScript client library is loaded.
+function onClientLoad() {
+    gapi.client.load('youtube', 'v3', onYouTubeApiLoad);
+}
+
+// Called automatically when YouTube API interface is loaded (see line 9).
+function onYouTubeApiLoad() {
+    gapi.client.setApiKey('AIzaSyAHIgCoXviJVoJzzxCKQgbyDIcwmDaymyI');
+
+    search();
+}
+
+function search() {
+    // Use the JavaScript client library to create a search.list() API call.
+    var request = gapi.client.youtube.search.list({
+        part: 'snippet',
+        type: 'video',
+        videoEmbeddable: 'true',
+        videoSyndicated: 'true',
+
+        q: SEARCH_QUERY,
+    });
+    
+    // Send the request to the API server,
+    // and invoke onSearchRepsonse() with the response.
+    request.execute(onSearchResponse);
+}
+
+// Called automatically with the response of the YouTube API request.
+function onSearchResponse(response) {
+    showResponse(response);
+}
+</script>
+<script src="https://apis.google.com/js/client.js?onload=onClientLoad" type="text/javascript"></script>
+
+</body>
+</html>

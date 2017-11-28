@@ -5,15 +5,38 @@ body {
   background-image: url("/bg.png");
 }
 
-.navbar {
-  background-color: #4682B4;
+.btn-primary {
+  background-color: #4682b4;
+  color: #f5f5f5;
+}
 
+.btn-primary:hover {
+  background-color: #326ea0;
+  color: #f5f5f5;
+}
+
+.input-group {
+  margin: 0px 10px;
+}
+
+.navbar {
+  background-color: #4682b4;
 }
 
 #navbar .navbar-brand {
   font-size: 25px;
   font-family: 'Quicksand', sans-serif;
   color: #f5f5f5;
+}
+
+.sign-out-button {
+  background-color: #f5f5f5;
+  color: #212529;
+}
+
+.sign-out-button:hover {
+  background-color: #f0f8ff;
+  color: #4682b4;
 }
 
 #main-container {
@@ -38,13 +61,13 @@ body {
   border-radius: 10px;
   border-width: 0.5px;
   border: solid;
-  border-color: #dddddd;
-  background: #bbbbbb;
+  border-color: #f5f5f5;
+  background: #e1e1e1;
   margin: 4px 0px;
 }
 
 #messages::-webkit-scrollbar {
-  background: #dddddd;
+  background: #f5f5f5;
   width: 12px;
 }
 
@@ -52,18 +75,19 @@ body {
   border-radius: 10px;
   border-width: 0.5px;
   border: solid;
-  border-color: #dddddd;
-  background: #999999;
+  border-color: #f5f5f5;
+  background: #cdcdcd;
 }
 
 #messages::-webkit-scrollbar-thumb:hover {
-  background: #777777;
+  background: #c3c3c3;
 }
 
 .message {
   margin: 5px;
   padding: 10px;
   border-radius: 10px;
+  border: 1px solid #d8dfe5;
   background-color: #F0F8FF;
 }
 

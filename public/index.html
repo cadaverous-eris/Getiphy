@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang='en'>
   <head>
     <title>Getiphy</title>
@@ -27,7 +27,7 @@
     <nav class="navbar navbar-light justify-content-between" id="navbar">
       <a class="navbar-brand header animated infinate bounce"  href="#">Getiphy</a>
       <div class="form-inline" id="login-area">
-        <div class="g-signin2 mr-sm-2" data-onsuccess="login" data-theme="dark"></div>
+        <div class="g-signin2 mr-sm-2" data-onsuccess="login" data-theme="light"></div>
       </div>
     </nav>
 
@@ -37,14 +37,12 @@
           <div class="row" id="chat-row">
             <div class="col" id="messages"></div>
           </div>
-
-
           <div class="row">
             <div class='col' id="input">
               <div id=message-input>
                 <div class="row" style="margin: 0px">
                   <div class="col col-auto">
-                    <button type="button" class="btn btn-secondary form-control" id="attachment-button" data-toggle="modal" data-target="#attachment-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-primary form-control" id="attachment-button" data-toggle="modal" data-target="#attachment-modal"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
                   </div>
                   <div class="col">
                     <input class="form-control" id="m" autocomplete="off" placeholder="">
@@ -53,12 +51,7 @@
                     <button class="form-control btn btn-primary" id="send-button">Send</button>
                   </div>
                 </div>
-                <!--<div class="card" style="margin-top: 10px;">
-                  <div class="card-header">
-                    Attachments
-                  </div>
-                  <div id="current-attachments"></div>
-                </div>-->
+                <!-- Attachments Preview is inserted here -->
               </div>
             </div>
           </div>
@@ -74,7 +67,7 @@
               <a class="navbar-brand" id="attachment-modal-label" href="#">Insert Media Attachments</a>
 
               <a class="nav-item nav-link active" id="nav-giphy-tab" data-toggle="tab" href="#nav-giphy" role="tab" aria-controls="nav-home" aria-selected="true" style="padding-bottom: 10px;">Giphy</a>
-              <a class="nav-item nav-link" id="nav-spotify-tab" data-toggle="tab" href="#nav-spotify" role="tab" aria-controls="nav-profile" aria-selected="false" style="padding-bottom: 10px;">Spotify</a>
+              <a class="nav-item nav-link" id="nav-youtube-tab" data-toggle="tab" href="#nav-youtube" role="tab" aria-controls="nav-profile" aria-selected="false" style="padding-bottom: 10px;">Youtube</a>
 
               <a class="close nav-item float-left" href="#" data-dismiss="modal" aria-label="Close">
                 <span class=navbar-text aria-hidden="true">&times;</span>
@@ -88,23 +81,26 @@
               <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-giphy" role="tabpanel" aria-labelledby="nav-giphy-tab">
                   <!-- Giphy Searching -->
-                  <div class="row justify-content-between form-inline attachment-search">
+                  <div class="row justify-content-start form-inline attachment-search">
                     <div class="input-group">
                       <div class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></div>
                       <input class="form-control" id="giphy-search" type="text" autocomplete="off" placeholder="Search Giphy">
                     </div>
-                    <!--<button class="form-control btn btn-secondary" id="#giphy-next-page">
-                      More Results
-                    </button>-->
+                    <button class="form-control btn btn-primary" id="giphy-search-button">Search</button>
                   </div>
-                  <div class="row justify-content-center search-results" id="giphy-results">
-                    
-                  </div>
+                  <div class="row justify-content-center search-results" id="giphy-results"></div>
                 </div>
 
-                <div class="tab-pane fade" id="nav-spotify" role="tabpanel" aria-labelledby="nav-spotify-tab">
-                  <!-- Spotify Searching -->
-                  [To-do]
+                <div class="tab-pane fade" id="nav-youtube" role="tabpanel" aria-labelledby="nav-youtube-tab">
+                  <!-- Youtube Searching -->
+                  <div class="row justify-content-start form-inline attachment-search">
+                    <div class="input-group">
+                      <div class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></div>
+                      <input class="form-control" id="youtube-search" type="text" autocomplete="off" placeholder="Search Youtube">
+                    </div>
+                    <button class="form-control btn btn-primary" id="youtube-search-button">Search</button>
+                  </div>
+                  <div class="row justify-content-center search-results" id="youtube-results"></div>
                 </div>
 
               </div>
