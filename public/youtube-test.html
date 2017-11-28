@@ -47,17 +47,17 @@ function showResponse(response) {
             var iframe = $('<iframe>').attr('width', "384").attr('height', "216").attr('src', videoSrc).attr('frameborder', "0").attr('allowfullscreen', 'true');
             $('#videos').append(iframe).append($('<br>'));
         }
-        console.log($('#videos').html());
+        console.log(response);
     }
 }
 
-// Called automatically when JavaScript client library is loaded.
-function onClientLoad() {
-    gapi.client.load('youtube', 'v3', onYouTubeApiLoad);
+// Called when JavaScript client library is loaded
+function onYoutubeClientLoad() {
+    gapi.client.load('youtube', 'v3', onYoutubeApiLoad);
 }
 
-// Called automatically when YouTube API interface is loaded (see line 9).
-function onYouTubeApiLoad() {
+// Called when YouTube API interface is loaded
+function onYoutubeApiLoad() {
     gapi.client.setApiKey('AIzaSyAHIgCoXviJVoJzzxCKQgbyDIcwmDaymyI');
 
     search();
@@ -70,6 +70,7 @@ function search() {
         type: 'video',
         videoEmbeddable: 'true',
         videoSyndicated: 'true',
+        maxResults: 10,
 
         q: SEARCH_QUERY,
     });
@@ -84,7 +85,7 @@ function onSearchResponse(response) {
     showResponse(response);
 }
 </script>
-<script src="https://apis.google.com/js/client.js?onload=onClientLoad" type="text/javascript"></script>
+<script src="https://apis.google.com/js/client.js?onload=onYoutubeClientLoad" type="text/javascript"></script>
 
 </body>
 </html>

@@ -257,3 +257,7 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
+
+.modal {
+  min-width: 495px;
+}

@@ -80,18 +80,35 @@ $(document).ready(function() {
 			var header = $('<div>').addClass('card-header attachment-input-header').text("Attachments");
 			var body = $('<div>').addClass('card-body attachment-input-body');
 
-			var gifRow = $('<div>').addClass('row justify-content-start')
-			for (var i = 0; i < messageAttachments.gifs.length; i++) {
-				var attachmentHolder = $('<div>').addClass('attachment-holder col-auto');
-				attachmentHolder.append($('<img>').attr('src', messageAttachments.gifs[i]).addClass('attachment-preview'));
-				attachmentHolder.append($('<span>').addClass('attachment-remove').attr('aria-hidden', "true").attr('data-index', i).html("&times;").on('click', function() {
-					messageAttachments.gifs.splice($(this).attr('data-index'), 1);
-					updateAttachmentInput();
-				}));
+			if (messageAttachments.gifs.length > 0) {
+				var gifRow = $('<div>').addClass('row justify-content-start')
+				for (var i = 0; i < messageAttachments.gifs.length; i++) {
+					var attachmentHolder = $('<div>').addClass('attachment-holder col-auto');
+					attachmentHolder.append($('<img>').attr('src', messageAttachments.gifs[i]).addClass('attachment-preview'));
+					attachmentHolder.append($('<span>').addClass('attachment-remove').attr('aria-hidden', "true").attr('data-index', i).html("&times;").on('click', function() {
+						messageAttachments.gifs.splice($(this).attr('data-index'), 1);
+						updateAttachmentInput();
+					}));
 
-				gifRow.append(attachmentHolder);
+					gifRow.append(attachmentHolder);
+				}
+				body.append(gifRow);
 			}
-			body.append(gifRow);
+
+			if (messageAttachments.videos.length > 0) {
+				var vidRow = $('<div>').addClass('row justify-content-start')
+				for (var i = 0; i < messageAttachments.videos.length; i++) {
+					var attachmentHolder = $('<div>').addClass('attachment-holder col-auto');
+					attachmentHolder.append($('<img>').attr('src', messageAttachments.videos[i].thumbnail).addClass('attachment-preview'));
+					attachmentHolder.append($('<span>').addClass('attachment-remove').attr('aria-hidden', "true").attr('data-index', i).html("&times;").on('click', function() {
+						messageAttachments.videos.splice($(this).attr('data-index'), 1);
+						updateAttachmentInput();
+					}));
+
+					vidRow.append(attachmentHolder);
+				}
+				body.append(vidRow);
+			}
 
 			card.append(header);
 			card.append(body);
@@ -215,8 +232,9 @@ $(document).ready(function() {
 	var giphyRequest;
 
 	function updateGiphyResults(query) {
-		$('#giphy-results').empty();
 		if (query && query.length > 0) {
+			$('#giphy-results').empty();
+			$('#giphy-search').val('');
 			var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + query + "&api_key=" + GIPHY_KEY + "&limit=" + GIPHY_LIMIT + "&rating=PG";
 
 			if (giphyRequest && giphyRequest.readyState != 4) {
@@ -246,6 +264,50 @@ $(document).ready(function() {
             			$('#giphy-results').append(gifCol);
             		}
             	}
+        	});
+		}
+	}
+
+	YOUTUBE_KEY = 'AIzaSyAHIgCoXviJVoJzzxCKQgbyDIcwmDaymyI';
+	YOUTUBE_LIMIT = 10;
+
+	$('#youtube-search-button').on('click', function() {
+		updateYoutubeResults($('#youtube-search').val().trim());
+	});
+
+	var youtubeRequest;
+
+	function updateYoutubeResults(query) {
+		if (query && query.length > 0) {
+			$('#youtube-results').empty();
+			$('#youtube-search').val('');
+			var queryURL = "https://content.googleapis.com/youtube/v3/search?maxResults=" + YOUTUBE_LIMIT + "&part=snippet&q=" + query + "&type=video&videoEmbeddable=true&videoSyndicated=true&key=" + YOUTUBE_KEY;
+
+			if (youtubeRequest && youtubeRequest.readyState != 4) {
+				youtubeRequest.abort();
+			}
+
+			youtubeRequest = $.ajax({
+            	url: queryURL,
+            	method: 'GET'
+        	});
+        	youtubeRequest.done(function(response) {
+        		//console.log(response);
+        		if (response && response.items) {
+	        		for (var i = 0; i < response.items.length; i++) {
+	            		//console.log(response.items[i].id.videoId);
+	            		var videoId = response.items[i].id.videoId;
+	            		var videoSrc = "//www.youtube.com/embed/" + videoId;
+
+	            		var iframe = $('<iframe>').attr('width', "384").attr('height', "216").attr('src', videoSrc).attr('frameborder', "0").attr('allowfullscreen', 'true');
+	            		
+	            		var col = $('<div>').addClass('col');
+	            		col.append(iframe);
+
+	            		$('#youtube-results').append(col);
+			        }
+			        //console.log(response);
+			    }
         	});
 		}
 	}
